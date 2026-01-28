@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: bambu-discord-bot
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: DISCORD_TOKEN
+        sync: false
+      - key: DISCORD_CHANNEL_ID
+        sync: false
+      - key: BAMBU_HOST
+        sync: false
+      - key: BAMBU_PORT
+        value: 8883
+      - key: BAMBU_USERNAME
+        value: bblp
+      - key: BAMBU_ACCESS_CODE
+        sync: false
+      - key: BAMBU_SERIAL
+        sync: false
+    healthCheckPath: /
+    autoDeploy: true

@@ -1,0 +1,21 @@
+{
+  "name": "bambu-discord-bot",
+  "version": "1.0.0",
+  "description": "Discord Bot für Bambu Lab 3D-Drucker Status und Statistiken",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js",
+    "dev": "node bot.js"
+  },
+  "keywords": ["discord", "bot", "bambu-lab", "3d-printer"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.4.1",
+    "mqtt": "^5.3.5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
