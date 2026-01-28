@@ -63,7 +63,7 @@ function connectToMQTT() {
     connectTimeout: 60 * 1000, // 60 Sekunden Timeout für Verbindungsaufbau
     keepalive: 60, // Keep-alive Interval in Sekunden
     clean: true, // Clean session
-    clientId: `bambu_discord_bot_${Math.random().toString(16).substr(2, 8)}`
+    clientId: `bambu_discord_bot_${Math.random().toString(16).slice(2, 10)}`
   });
 
   mqttClient.on('connect', () => {
@@ -112,7 +112,6 @@ function connectToMQTT() {
 
   mqttClient.on('offline', () => {
     console.log('📴 MQTT Client ist offline');
-    printerStatus.connected = false;
   });
 }
 
