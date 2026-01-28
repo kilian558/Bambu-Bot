@@ -20,8 +20,10 @@ Ein Discord Bot, der den Status und Statistiken deines Bambu Lab 3D-Druckers in 
 2. Klicke auf "New Application" und gib einen Namen ein
 3. Gehe zu "Bot" → "Add Bot"
 4. Kopiere den **Token** (wird später benötigt)
-5. Aktiviere unter "Privileged Gateway Intents":
-   - ✅ MESSAGE CONTENT INTENT
+5. **WICHTIG:** Aktiviere unter "Privileged Gateway Intents" ALLE folgenden Intents:
+   - ✅ **PRESENCE INTENT**
+   - ✅ **SERVER MEMBERS INTENT**
+   - ✅ **MESSAGE CONTENT INTENT**
 6. Gehe zu "OAuth2" → "URL Generator"
 7. Wähle folgende Scopes:
    - ✅ `bot`
@@ -192,6 +194,21 @@ Die Message wird automatisch aktualisiert wenn:
 ```
 
 ## 🔧 Fehlerbehebung
+
+### ❌ Error: Used disallowed intents
+**Das ist der häufigste Fehler!**
+
+Lösung:
+1. Gehe zum [Discord Developer Portal](https://discord.com/developers/applications)
+2. Wähle deine Application
+3. Gehe zu "Bot"
+4. Scrolle zu "Privileged Gateway Intents"
+5. Aktiviere **ALLE drei Intents**:
+   - ✅ PRESENCE INTENT
+   - ✅ SERVER MEMBERS INTENT
+   - ✅ MESSAGE CONTENT INTENT
+6. Klicke auf "Save Changes"
+7. Starte den Bot neu
 
 ### Bot startet nicht
 - Überprüfe den Discord Token in der `.env` Datei
