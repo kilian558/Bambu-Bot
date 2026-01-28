@@ -53,11 +53,17 @@ function connectToMQTT() {
 
   const mqttUrl = `mqtts://${mqttHost}:${mqttPort}`;
   
+  console.log(`🔄 Verbinde mit MQTT Broker: ${mqttUrl}`);
+  
   mqttClient = mqtt.connect(mqttUrl, {
     username: mqttUsername,
     password: mqttPassword,
     rejectUnauthorized: false,
-    reconnectPeriod: 5000
+    reconnectPeriod: 5000,
+    connectTimeout: 60 * 1000, // 60 Sekunden Timeout für Verbindungsaufbau
+    keepalive: 60, // Keep-alive Interval in Sekunden
+    clean: true, // Clean session
+    clientId: `bambu_discord_bot_${Math.random().toString(16).slice(2, 10)}`
   });
 
   mqttClient.on('connect', () => {
@@ -86,12 +92,26 @@ function connectToMQTT() {
 
   mqttClient.on('error', (error) => {
     console.error('❌ MQTT Fehler:', error);
+    console.error('💡 Überprüfen Sie:');
+    console.error('   - MQTT Host ist erreichbar:', mqttHost);
+    console.error('   - Port ist korrekt:', mqttPort);
+    console.error('   - Access Code ist korrekt');
+    console.error('   - Firewall lässt Port 8883 zu');
     printerStatus.connected = false;
   });
 
   mqttClient.on('close', () => {
     console.log('⚠️ MQTT Verbindung geschlossen');
+    console.log('🔄 Automatischer Wiederverbindungsversuch in 5 Sekunden...');
     printerStatus.connected = false;
+  });
+
+  mqttClient.on('reconnect', () => {
+    console.log('🔄 Versuche MQTT Wiederverbindung...');
+  });
+
+  mqttClient.on('offline', () => {
+    console.log('📴 MQTT Client ist offline');
   });
 }
 
