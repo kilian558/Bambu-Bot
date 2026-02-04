@@ -218,11 +218,13 @@ client.once('ready', async () => {
   // Verbinde mit MQTT
   connectToMQTT();
 
-  // Initialisiere Status Message nach 5 Sekunden
+  // Initialisiere Status Message nach 5 Sekunden (warte bis MQTT verbunden ist)
   setTimeout(async () => {
     if (statusChannelId) {
-      console.log('🔄 Erstelle initiale Status-Message...');
+      console.log('🔄 Versuche initiale Status-Message zu erstellen...');
       await updateDiscordStatusMessage();
+    } else {
+      console.error('❌ DISCORD_CHANNEL_ID ist nicht in .env gesetzt!');
     }
   }, 5000);
 });
@@ -394,13 +396,24 @@ async function updateDiscordStatusMessage() {
 
   try {
     if (!statusChannelId) {
-      console.log('⚠️ Keine Discord Channel-ID konfiguriert. Setze DISCORD_CHANNEL_ID in .env');
+      console.error('❌ Keine Discord Channel-ID konfiguriert. Setze DISCORD_CHANNEL_ID in .env');
+      return;
+    }
+
+    // Prüfe ob Bot bereit ist
+    if (!client.isReady()) {
+      console.log('⚠️ Discord Bot ist noch nicht bereit');
       return;
     }
 
     const channel = await client.channels.fetch(statusChannelId);
     if (!channel) {
-      console.error('❌ Channel nicht gefunden!');
+      console.error('❌ Channel nicht gefunden! Prüfe DISCORD_CHANNEL_ID:', statusChannelId);
+      return;
+    }
+
+    if (!channel.isTextBased()) {
+      console.error('❌ Channel ist kein Text-Channel!');
       return;
     }
 
@@ -425,7 +438,7 @@ async function updateDiscordStatusMessage() {
   }
 }
 
-// Periodisches Update (alle 30 Sekunden)
+// Periodisches Update (alle 
 setInterval(() => {
   if (printerStatus.connected && statusMessage) {
     updateDiscordStatusMessage();
