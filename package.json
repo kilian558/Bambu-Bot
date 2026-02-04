@@ -5,7 +5,13 @@
   "main": "bot.js",
   "scripts": {
     "start": "node bot.js",
-    "dev": "node bot.js"
+    "dev": "node bot.js",
+    "pm2:start": "pm2 start ecosystem.config.js",
+    "pm2:stop": "pm2 stop bambu-discord-bot",
+    "pm2:restart": "pm2 restart bambu-discord-bot",
+    "pm2:logs": "pm2 logs bambu-discord-bot",
+    "pm2:status": "pm2 status",
+    "pm2:delete": "pm2 delete bambu-discord-bot"
   },
   "keywords": ["discord", "bot", "bambu-lab", "3d-printer"],
   "author": "",

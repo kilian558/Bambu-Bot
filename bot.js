@@ -437,5 +437,59 @@ process.on('unhandledRejection', error => {
   console.error('❌ Unhandled promise rejection:', error);
 });
 
+process.on('uncaughtException', error => {
+  console.error('❌ Uncaught exception:', error);
+  // Bei kritischen Fehlern: graceful shutdown
+  if (mqttClient) {
+    mqttClient.end(false, () => {
+      process.exit(1);
+    });
+  } else {
+    process.exit(1);
+  }
+});
+
+// Graceful shutdown für PM2
+process.on('SIGINT', async () => {
+  console.log('🔄 Empfange SIGINT Signal, fahre Bot herunter...');
+  
+  // MQTT Verbindung beenden
+  if (mqttClient) {
+    console.log('🔌 Trenne MQTT Verbindung...');
+    mqttClient.end(true);
+  }
+  
+  // Discord Bot ausloggen
+  if (client) {
+    console.log('👋 Logge Discord Bot aus...');
+    await client.destroy();
+  }
+  
+  console.log('✅ Shutdown abgeschlossen');
+  process.exit(0);
+});
+
+process.on('SIGTERM', async () => {
+  console.log('🔄 Empfange SIGTERM Signal, fahre Bot herunter...');
+  
+  // MQTT Verbindung beenden
+  if (mqttClient) {
+    console.log('🔌 Trenne MQTT Verbindung...');
+    mqttClient.end(true);
+  }
+  
+  // Discord Bot ausloggen
+  if (client) {
+    console.log('👋 Logge Discord Bot aus...');
+    await client.destroy();
+  }
+  
+  console.log('✅ Shutdown abgeschlossen');
+  process.exit(0);
+});
+
 // Bot starten
-client.login(process.env.DISCORD_TOKEN);
+client.login(process.env.DISCORD_TOKEN).catch(error => {
+  console.error('❌ Fehler beim Login:', error);
+  process.exit(1);
+});
